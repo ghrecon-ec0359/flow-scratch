@@ -1,0 +1,15 @@
+name: ref-slow
+on:
+  workflow_dispatch:
+concurrency:
+  group: ref-slow-lock
+  cancel-in-progress: false
+jobs:
+  wait:
+    name: wait
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start
+        run: echo "sleeping for four minutes"
+      - name: Sleep
+        run: sleep 240
