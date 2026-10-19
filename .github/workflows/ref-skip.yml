@@ -1,0 +1,11 @@
+name: ref-skip
+on:
+  workflow_dispatch:
+jobs:
+  never:
+    name: never
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Never runs
+        run: echo "never"
