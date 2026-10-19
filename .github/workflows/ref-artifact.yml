@@ -1,0 +1,23 @@
+name: ref-artifact
+on:
+  workflow_dispatch:
+jobs:
+  artifacts:
+    name: artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make files
+        run: |
+          mkdir -p out
+          echo "first artifact" > out/first.txt
+          echo "second artifact" > out/second.txt
+      - name: Upload first
+        uses: actions/upload-artifact@v4
+        with:
+          name: first-artifact
+          path: out/first.txt
+      - name: Upload second
+        uses: actions/upload-artifact@v4
+        with:
+          name: second-artifact
+          path: out/second.txt
