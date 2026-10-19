@@ -1,0 +1,16 @@
+name: ref-reusable
+on:
+  workflow_call:
+    inputs:
+      who:
+        description: Who to greet
+        required: false
+        default: world
+        type: string
+jobs:
+  greet:
+    name: greet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Greet
+        run: echo "hello ${{ inputs.who }}"
