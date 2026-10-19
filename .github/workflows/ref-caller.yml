@@ -1,0 +1,8 @@
+name: ref-caller
+on:
+  workflow_dispatch:
+jobs:
+  call:
+    uses: ./.github/workflows/ref-reusable.yml
+    with:
+      who: caller
