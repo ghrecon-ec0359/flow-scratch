@@ -1,0 +1,15 @@
+name: ref-hold
+on:
+  workflow_dispatch:
+concurrency:
+  group: ref-hold-lock
+  cancel-in-progress: false
+jobs:
+  hold:
+    name: hold
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start
+        run: echo "holding for fifteen minutes"
+      - name: Sleep
+        run: sleep 900
