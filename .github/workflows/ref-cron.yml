@@ -1,0 +1,12 @@
+name: ref-cron
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+jobs:
+  tick:
+    name: tick
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tick
+        run: echo "tick"
