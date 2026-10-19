@@ -1,0 +1,62 @@
+name: ref-ci
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    name: build (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [18, 20]
+    steps:
+      - name: Echo
+        run: echo "building with node ${{ matrix.node }}"
+      - uses: actions/checkout@v4
+      - name: List files
+        run: ls -la
+      - name: Install group
+        run: |
+          echo "::group::Install dependencies"
+          echo "resolving packages for node ${{ matrix.node }}"
+          echo "::endgroup::"
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ref
+          key: ref-ci-${{ runner.os }}-node${{ matrix.node }}-${{ github.sha }}
+          restore-keys: |
+            ref-ci-${{ runner.os }}-node${{ matrix.node }}-
+      - name: Write step summary
+        run: |
+          {
+            echo "## Build summary"
+            echo ""
+            echo "| Node | Result |"
+            echo "| --- | --- |"
+            echo "| ${{ matrix.node }} | ok |"
+          } >> "$GITHUB_STEP_SUMMARY"
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint with annotations
+        run: |
+          echo "::notice file=README.md,line=1,title=Lint::Lint started"
+          echo "::warning file=README.md,line=1,title=Style::Trailing whitespace"
+          echo "::error file=README.md,line=2,title=Format::Missing title"
+          echo "lint finished with 1 error and 1 warning"
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          echo "running 3 tests"
+          echo "::error file=src/app.test.ts,line=12,title=Expected value::expected 2 but received 3"
+          echo "2 passed, 1 failed"
