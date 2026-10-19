@@ -1,0 +1,21 @@
+name: ref-fail
+on:
+  workflow_dispatch:
+jobs:
+  fail:
+    name: fail
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print
+        run: echo "about to fail"
+      - name: Fail
+        run: |
+          echo "::error::the step failed on purpose"
+          exit 1
+  after:
+    name: after failure
+    runs-on: ubuntu-latest
+    needs: fail
+    steps:
+      - name: Never runs
+        run: echo "never"
