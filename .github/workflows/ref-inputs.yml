@@ -1,0 +1,48 @@
+name: ref-inputs
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: Message to print
+        required: true
+        default: hello
+        type: string
+      verbose:
+        description: Print extra output
+        required: false
+        default: false
+        type: boolean
+      level:
+        description: Log level
+        required: true
+        default: info
+        type: choice
+        options:
+          - info
+          - debug
+          - trace
+      count:
+        description: How many times to print
+        required: false
+        default: 1
+        type: number
+      target:
+        description: Environment to deploy to
+        required: false
+        default: ref-staging
+        type: environment
+jobs:
+  print:
+    name: print
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print inputs
+        run: echo "message=${{ inputs.message }} level=${{ inputs.level }} count=${{ inputs.count }} verbose=${{ inputs.verbose }}"
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    needs: print
+    environment: ${{ inputs.target }}
+    steps:
+      - name: Deploy
+        run: echo "deploying to ${{ inputs.target }}"
